@@ -1,0 +1,34 @@
+# secrets
+.env
+*.key
+
+# node / hardhat
+node_modules/
+artifacts/
+cache/
+typechain-types/
+coverage/
+coverage.json
+gasReporter_output.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# local data
+data/*.db
+data/*.sqlite
+data/cache/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# keep deployment records (public addresses + ABI) in git, except local network
+deployments/hardhat.json
+deployments/localhost.json

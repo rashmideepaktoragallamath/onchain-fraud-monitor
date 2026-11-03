@@ -1,0 +1,18 @@
+{
+  "name": "onchain-fraud-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fraud detection and transaction monitoring layer for on-chain finance (RiskRegistry contract + tooling)",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.17"
+  }
+}

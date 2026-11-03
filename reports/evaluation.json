@@ -1,0 +1,305 @@
+[
+  {
+    "seed": 7,
+    "alert_threshold": 50,
+    "transactions": 3546,
+    "fraud_transactions": 552,
+    "normal_transactions": 2994,
+    "with_allowlist": {
+      "allowlist_used": true,
+      "alerts": 249,
+      "alerts_in_fraud_scenarios": 248,
+      "false_positive_alerts": 1,
+      "false_positive_rate_pct": 0.03,
+      "alert_precision": 0.996,
+      "scenario_recall": 1.0,
+      "scenarios_detected": "42/42",
+      "per_pattern": {
+        "structuring": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_out": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_in": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "round_trip": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "watchlisted": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "new_wallet_burst": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "high_velocity": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        }
+      }
+    },
+    "without_allowlist": {
+      "allowlist_used": false,
+      "alerts": 409,
+      "alerts_in_fraud_scenarios": 248,
+      "false_positive_alerts": 161,
+      "false_positive_rate_pct": 5.38,
+      "alert_precision": 0.606,
+      "scenario_recall": 1.0,
+      "scenarios_detected": "42/42",
+      "per_pattern": {
+        "structuring": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_out": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_in": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "round_trip": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "watchlisted": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "new_wallet_burst": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "high_velocity": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        }
+      }
+    }
+  },
+  {
+    "seed": 11,
+    "alert_threshold": 50,
+    "transactions": 3551,
+    "fraud_transactions": 552,
+    "normal_transactions": 2999,
+    "with_allowlist": {
+      "allowlist_used": true,
+      "alerts": 262,
+      "alerts_in_fraud_scenarios": 252,
+      "false_positive_alerts": 10,
+      "false_positive_rate_pct": 0.33,
+      "alert_precision": 0.962,
+      "scenario_recall": 1.0,
+      "scenarios_detected": "42/42",
+      "per_pattern": {
+        "structuring": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_out": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_in": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "round_trip": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "watchlisted": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "new_wallet_burst": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "high_velocity": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        }
+      }
+    },
+    "without_allowlist": {
+      "allowlist_used": false,
+      "alerts": 478,
+      "alerts_in_fraud_scenarios": 252,
+      "false_positive_alerts": 226,
+      "false_positive_rate_pct": 7.54,
+      "alert_precision": 0.527,
+      "scenario_recall": 1.0,
+      "scenarios_detected": "42/42",
+      "per_pattern": {
+        "structuring": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_out": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_in": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "round_trip": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "watchlisted": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "new_wallet_burst": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "high_velocity": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        }
+      }
+    }
+  },
+  {
+    "seed": 23,
+    "alert_threshold": 50,
+    "transactions": 3545,
+    "fraud_transactions": 552,
+    "normal_transactions": 2993,
+    "with_allowlist": {
+      "allowlist_used": true,
+      "alerts": 247,
+      "alerts_in_fraud_scenarios": 247,
+      "false_positive_alerts": 0,
+      "false_positive_rate_pct": 0.0,
+      "alert_precision": 1.0,
+      "scenario_recall": 1.0,
+      "scenarios_detected": "42/42",
+      "per_pattern": {
+        "structuring": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_out": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_in": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "round_trip": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "watchlisted": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "new_wallet_burst": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "high_velocity": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        }
+      }
+    },
+    "without_allowlist": {
+      "allowlist_used": false,
+      "alerts": 434,
+      "alerts_in_fraud_scenarios": 247,
+      "false_positive_alerts": 187,
+      "false_positive_rate_pct": 6.25,
+      "alert_precision": 0.569,
+      "scenario_recall": 1.0,
+      "scenarios_detected": "42/42",
+      "per_pattern": {
+        "structuring": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_out": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "fan_in": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "round_trip": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "watchlisted": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "new_wallet_burst": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        },
+        "high_velocity": {
+          "scenarios": 6,
+          "detected": 6,
+          "with_expected_reason": 6
+        }
+      }
+    }
+  }
+]
