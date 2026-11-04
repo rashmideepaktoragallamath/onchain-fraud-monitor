@@ -6,7 +6,8 @@ import time
 
 from monitor.config import DetectionConfig
 from monitor.features import build_features
-from monitor.models import Alert
+from monitor.models import Alert, Tx
+from monitor.reasons import Reason
 from monitor.scoring import RiskResult, RiskScorer
 from monitor.storage import Store
 
@@ -24,6 +25,20 @@ def score_transactions(
     scorer = RiskScorer(cfg)
     scorer.fit(features)
     return scorer.score(features)
+
+
+# Signals that describe what the SENDER did. If none fired, a fan-in alert is about the wallet
+# that collected the money, so the case belongs to the receiver (one case for the whole ring).
+_SENDER_SIGNALS = (
+    Reason.FAN_OUT | Reason.HIGH_VELOCITY | Reason.STRUCTURING | Reason.ROUND_TRIP | Reason.NEW_WALLET_BURST
+)
+
+
+def alert_subject(tx: Tx, reason_mask: int) -> str:
+    """The wallet an alert is about."""
+    if reason_mask & Reason.FAN_IN and not reason_mask & _SENDER_SIGNALS:
+        return tx.receiver
+    return tx.sender
 
 
 def analyze(
@@ -49,7 +64,7 @@ def analyze(
             continue
         alert = Alert(
             tx_hash=r.tx_hash,
-            subject=by_hash[r.tx_hash].sender,
+            subject=alert_subject(by_hash[r.tx_hash], r.mask),
             risk_score=r.score,
             reason_mask=r.mask,
             explanation=r.explanation,

@@ -30,6 +30,18 @@ class Tx:
     gas_price_gwei: float = 0.0
 
 
+# Review workflow. Mirrors RiskRegistry.updateStatus: Escalated and Dismissed are final.
+# The index of each status is its value in the contract's `Status` enum.
+STATUSES = ("open", "reviewed", "escalated", "dismissed")
+ALLOWED_TRANSITIONS: dict[str, frozenset[str]] = {
+    "open": frozenset({"reviewed", "escalated", "dismissed"}),
+    "reviewed": frozenset({"escalated", "dismissed"}),
+    "escalated": frozenset(),
+    "dismissed": frozenset(),
+}
+STATUS_TO_CHAIN = {name: index for index, name in enumerate(STATUSES)}
+
+
 @dataclass(frozen=True)
 class Alert:
     """A scored transaction that crossed the alert threshold."""
@@ -42,3 +54,34 @@ class Alert:
     created_at: int
     status: str = "open"
     anchored_tx: str | None = None  # tx hash of the on-chain RiskRegistry write
+    chain_alert_id: int | None = None  # id assigned by the contract (None = not anchored)
+    chain_status: str | None = None  # status last written on-chain
+
+
+@dataclass(frozen=True)
+class CaseSummary:
+    """All alerts about one wallet, grouped so analysts review wallets, not single transfers."""
+
+    wallet: str
+    alert_count: int
+    max_score: int
+    reason_mask: int
+    status: str  # open if any alert is open, else escalated > reviewed > dismissed
+    first_seen: int | None
+    last_seen: int | None
+    anchored: bool
+    anchor_tx: str | None
+
+
+@dataclass(frozen=True)
+class CaseState:
+    """Analyst-workflow state for one wallet (a "case" groups all alerts about that wallet)."""
+
+    subject: str
+    status: str = "open"  # open | reviewed | escalated | dismissed (mirrors the contract's enum)
+    queued: bool = False  # waiting to be synced to the on-chain RiskRegistry
+    alert_id: int | None = None  # RiskRegistry alert id once anchored
+    anchor_tx: str | None = None  # Sepolia tx that anchored the alert
+    anchor_gas: int | None = None  # gas used by that tx
+    note: str | None = None
+    updated_at: int = 0

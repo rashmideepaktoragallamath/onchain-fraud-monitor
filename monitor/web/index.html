@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transaction Monitoring Console</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Transaction Monitoring Console</h1>
+      <p>Explainable fraud detection for on-chain finance, with a tamper-evident audit trail</p>
+    </div>
+    <div class="meta">
+      <span id="mode" class="pill" role="status"></span>
+      <span id="fresh" class="muted"></span>
+      <a id="contract" class="link" target="_blank" rel="noopener noreferrer" hidden></a>
+    </div>
+  </header>
+
+  <main>
+    <section id="kpis" class="kpis" aria-label="Key figures"></section>
+
+    <section class="charts" aria-label="Charts">
+      <figure class="card">
+        <figcaption><h2>Alerts over time</h2><p class="sub" id="time-sub"></p></figcaption>
+        <div id="chart-time" class="chart"></div>
+      </figure>
+      <figure class="card">
+        <figcaption><h2>Active cases by severity</h2><p class="sub">One case per wallet</p></figcaption>
+        <div id="chart-sev" class="chart"></div>
+      </figure>
+      <figure class="card">
+        <figcaption><h2>Most common risk signals</h2><p class="sub">Cases showing each signal</p></figcaption>
+        <div id="chart-signals" class="chart"></div>
+      </figure>
+    </section>
+
+    <section class="card cases" aria-labelledby="cases-title">
+      <div class="toolbar">
+        <h2 id="cases-title">Cases</h2>
+        <div class="filters">
+          <label>Show
+            <select id="f-status">
+              <option value="active">Active (not dismissed)</option>
+              <option value="open">Open</option>
+              <option value="reviewed">Reviewed</option>
+              <option value="escalated">Escalated</option>
+              <option value="dismissed">Dismissed</option>
+              <option value="all">All</option>
+            </select>
+          </label>
+          <label>Min score
+            <select id="f-score">
+              <option value="0">Any</option>
+              <option value="50">50+</option>
+              <option value="65">65+ (high)</option>
+              <option value="80">80+ (critical)</option>
+            </select>
+          </label>
+          <label>Wallet
+            <input id="f-q" type="search" placeholder="0x…" maxlength="42" autocomplete="off" spellcheck="false">
+          </label>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Severity</th>
+              <th scope="col">Wallet</th>
+              <th scope="col" class="num">Score</th>
+              <th scope="col">Signals</th>
+              <th scope="col" class="num">Alerts</th>
+              <th scope="col">Last seen</th>
+              <th scope="col">Status</th>
+              <th scope="col">On-chain</th>
+            </tr>
+          </thead>
+          <tbody id="cases-body"></tbody>
+        </table>
+      </div>
+      <p id="cases-empty" class="empty" hidden>No cases match these filters.</p>
+      <p id="cases-count" class="muted small"></p>
+    </section>
+
+    <section class="about" aria-label="How it works">
+      <div class="card"><h3>1 · Detect</h3><p>Rules for known laundering patterns (structuring, fan-out and fan-in, round-trips, fresh-wallet bursts, watchlist hits) plus an Isolation Forest that flags unusual behaviour.</p></div>
+      <div class="card"><h3>2 · Explain</h3><p>Every score is built from named signals. Each signal comes with plain-language AML context, so a compliance officer can justify the decision.</p></div>
+      <div class="card"><h3>3 · Prove</h3><p>Reviewed cases are anchored in the RiskRegistry smart contract. Neither the alert nor its review history can be silently changed or deleted afterwards.</p></div>
+    </section>
+  </main>
+
+  <div id="scrim" class="scrim" hidden></div>
+  <aside id="drawer" class="drawer" hidden aria-label="Case detail" tabindex="-1"></aside>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="tip" class="tip" hidden></div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

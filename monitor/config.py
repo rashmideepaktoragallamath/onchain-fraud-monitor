@@ -37,6 +37,7 @@ class Settings:
     db_path: Path
     watchlist_path: Path
     allowlist_path: Path
+    deployment_path: Path
     detection: DetectionConfig = field(default_factory=DetectionConfig)
 
 
@@ -62,6 +63,16 @@ def load_address_file(path: Path) -> frozenset[str]:
     return frozenset(normalize_address(a) for a in entries)
 
 
+def add_address(path: Path, address: str) -> frozenset[str]:
+    """Validate and add one address to a JSON address file (atomic write)."""
+    updated = set(load_address_file(path)) | {normalize_address(address)}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps({"addresses": sorted(updated)}, indent=2), encoding="utf-8")
+    tmp.replace(path)
+    return frozenset(updated)
+
+
 def load_settings() -> Settings:
     load_env_file(ROOT / ".env")
     return Settings(
@@ -69,4 +80,20 @@ def load_settings() -> Settings:
         db_path=Path(os.environ.get("MONITOR_DB_PATH", ROOT / "data" / "monitor.db")),
         watchlist_path=ROOT / "data" / "watchlist.json",
         allowlist_path=ROOT / "data" / "allowlist.json",
+        deployment_path=ROOT / "deployments" / "sepolia.json",
     )
+
+
+def write_json_atomic(path: Path, data: object) -> None:
+    """Write JSON via a temp file + rename so a reader never sees a half-written file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def add_address(path: Path, address: str) -> frozenset[str]:
+    """Add one validated address to a JSON address file and return the new set."""
+    updated = load_address_file(path) | {normalize_address(address)}
+    write_json_atomic(path, {"addresses": sorted(updated)})
+    return updated

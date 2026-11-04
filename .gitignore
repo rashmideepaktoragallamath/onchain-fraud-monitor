@@ -20,8 +20,11 @@ venv/
 .ipynb_checkpoints/
 
 # local data
-data/*.db
+data/*.db*
 data/*.sqlite
+data/outbox.json
+data/anchored.json
+data/demo_*.json
 data/cache/
 
 # OS / editor

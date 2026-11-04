@@ -27,9 +27,9 @@ Ethereum mainnet (read-only RPC) ──► ingestion ──► features ──�
 | 1. Scaffold | done |
 | 2. `RiskRegistry.sol` + tests + deploy script | done (15/15 tests pass) |
 | 3. Live ingestion (JSON-RPC, SQLite, cursor) | done |
-| 4-5. Detection engine + explainable risk score | done (32 Python tests pass) |
-| 6. API + on-chain anchoring | todo |
-| 7. Dashboard | todo |
+| 4-5. Detection engine + explainable risk score | done |
+| 6. Cases + local API + on-chain anchoring (`npm run anchor`) | done |
+| 7. Dashboard (`python -m monitor.serve`) | done |
 | 8. Evaluation write-up | numbers in `reports/evaluation.json` |
 
 ## Quick start (smart contract)
@@ -65,3 +65,30 @@ python -m monitor.run --follow   # live, continuous (Ctrl+C to stop)
 
 `data/allowlist.json` (known exchanges/routers) and `data/watchlist.json` (flagged addresses)
 are plain JSON: `{"addresses": ["0x..."]}`. See `data/watchlist.example.json`.
+
+## Dashboard
+
+```bash
+python -m monitor.serve --demo   # simulated fraud, own database, no internet needed
+python -m monitor.serve --live   # real mainnet blocks, refreshed every 12 s (needs MAINNET_RPC_URL)
+python -m monitor.serve          # view the stored live database without ingesting
+```
+
+Open http://127.0.0.1:8000 . Alerts are grouped into **one case per wallet**. An analyst can
+mark a case reviewed / escalated / dismissed (same rules as the contract), allowlist a known
+exchange, and queue it for on-chain anchoring. Then, in a second terminal:
+
+```bash
+npm run anchor      # writes the queued cases to RiskRegistry on Sepolia, records gas + tx hash
+```
+
+Refresh the dashboard to see the on-chain proof. The web server never holds a private key:
+only the Hardhat script signs transactions.
+
+## Tests
+
+```bash
+python -m pytest            # Python engine + dashboard API + security checks
+npm run test:anchor         # anchoring logic against a fake contract
+npx hardhat test            # smart contract
+```

@@ -155,3 +155,19 @@ def test_detector_regression_on_simulated_fraud():
     assert r["scenario_recall"] >= 0.9
     assert r["false_positive_rate_pct"] <= 1.0
     assert r["alert_precision"] >= 0.9
+
+
+def test_fan_in_alerts_are_filed_under_the_collecting_wallet():
+    """20 wallets paying one recipient must be ONE case about the recipient, not 20 cases."""
+    store = Store()
+    collector = 900
+    store.insert_txs([tx(1_000_000 + i * 30, 100 + i, collector, 2.0) for i in range(20)])
+    alerts = analyze(store, CFG, now=1)
+    assert alerts, "fan-in should raise alerts"
+    assert {a.subject for a in alerts} == {addr(collector)}
+
+
+def test_fan_out_alerts_stay_with_the_sender():
+    store = Store()
+    store.insert_txs([tx(1_000_000 + i * 30, 7, 100 + i, 2.0) for i in range(20)])
+    assert {a.subject for a in analyze(store, CFG, now=1)} == {addr(7)}
