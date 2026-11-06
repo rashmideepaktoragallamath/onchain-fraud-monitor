@@ -7,7 +7,7 @@ Mini project for **CS2614 Fundamentals of Blockchain**, School of Computer Scien
 
 A prototype that watches live Ethereum transactions, scores wallets from 0 to 100 with named, explainable reasons, lets an analyst review the cases, and anchors alerts and review decisions in a tamper-evident smart contract on the Sepolia testnet.
 
-- Demo video: _add link here_
+- Demo video: https://drive.google.com/file/d/1XM5nRSkE7Bwcg5PfBr3fC0w2XQcKWQ9K/view?usp=sharing
 - Contract on Sepolia: [`0x1D5a2F95057EFbbb596b9E14A7dAD3975190924b`](https://sepolia.etherscan.io/address/0x1D5a2F95057EFbbb596b9E14A7dAD3975190924b)
 - Report, slides and IEEE paper: see the [`docs`](docs) folder
 
