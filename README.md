@@ -1,94 +1,142 @@
 # Fraud Detection & Transaction Monitoring Layer for On-Chain Finance
 
-Mini project — Fundamentals of Blockchain, RV University.
-Team: Bhoomika P (USN0090), Anita (USN0055), Rashmi DT (USN0362)
+Mini project for **CS2614 Fundamentals of Blockchain**, School of Computer Science and Engineering, RV University, Bengaluru.
 
-A prototype that watches live Ethereum transactions, scores each one 0–100 with
-explainable reason codes, and anchors alerts in a tamper-evident on-chain registry that
-analysts review through a dashboard.
+**Team:** Rashmi DT (USN0362), Bhoomika P (USN0090), Anita (USN0055)
+**Guide:** Cynthia J
 
-## Architecture (planned)
+A prototype that watches live Ethereum transactions, scores wallets from 0 to 100 with named, explainable reasons, lets an analyst review the cases, and anchors alerts and review decisions in a tamper-evident smart contract on the Sepolia testnet.
+
+- Demo video: _add link here_
+- Contract on Sepolia: [`0x1D5a2F95057EFbbb596b9E14A7dAD3975190924b`](https://sepolia.etherscan.io/address/0x1D5a2F95057EFbbb596b9E14A7dAD3975190924b)
+- Report, slides and IEEE paper: see the [`docs`](docs) folder
+
+## The problem
+
+Public blockchains let anyone move funds through new pseudonymous wallets, and nothing screens those transfers for money-laundering behaviour. Compliance teams review raw chain data by hand or rely on opaque scores, and the alert records they keep can be edited afterwards. This project detects suspicious patterns, explains every alert in plain language, and records alerts and decisions in a contract that nobody can silently change.
+
+## How it works
 
 ```
-Ethereum mainnet (read-only RPC) ──► ingestion ──► features ──► rules + Isolation Forest
-                                                                      │
-                                                         risk score + reason codes
-                                                                      │
-                          dashboard ◄── API ◄── alerts DB ◄───────────┤
-                                                                      ▼
-                                                      RiskRegistry.sol (Sepolia)
-                                                      audit trail of alerts + reviews
+Ethereum mainnet (read-only JSON-RPC)
+        |
+   Ingestion (Python, SQLite)
+        |
+   Features -> 8 rules + Isolation Forest -> noisy-OR score 0-100 + reason codes
+        |
+   Dashboard (one case per wallet, review workflow)
+        |  analyst queues a case
+   data/outbox.json -> npm run anchor (only component that signs)
+        |
+   RiskRegistry.sol on Sepolia  (AlertRaised, AlertStatusChanged events)
 ```
 
-## Progress
+**Detection rules:** structuring, fan-out, fan-in, round-trip, high velocity, watchlist hit, large value, new-wallet burst, plus an Isolation Forest outlier signal. Signals combine as `score = 100 x (1 - product(1 - w_i))`, so every score decomposes into the reasons that produced it. Alerts start at a score of 50.
 
-| Step | Status |
-|------|--------|
-| 1. Scaffold | done |
-| 2. `RiskRegistry.sol` + tests + deploy script | done (15/15 tests pass) |
-| 3. Live ingestion (JSON-RPC, SQLite, cursor) | done |
-| 4-5. Detection engine + explainable risk score | done |
-| 6. Cases + local API + on-chain anchoring (`npm run anchor`) | done |
-| 7. Dashboard (`python -m monitor.serve`) | done |
-| 8. Evaluation write-up | numbers in `reports/evaluation.json` |
+**Smart contract (`RiskRegistry`)**
+- Roles: owner and analysts; two-step ownership transfer.
+- `raiseAlert` stores a transaction hash, a wallet, a score (1-100) and a reason bitmask; one alert per transaction.
+- `updateStatus` follows Open -> Reviewed / Escalated / Dismissed; Escalated and Dismissed are final.
+- Custom errors and events for every action. No personal data is stored.
 
-## Quick start (smart contract)
+**Security**
+- Secrets live only in `.env` (git-ignored). Use a throwaway testnet wallet.
+- Mainnet access is read-only; no mainnet keys or funds are involved.
+- The dashboard server binds to localhost, checks Host and Origin, needs a custom header on writes, sets a strict content-security policy, limits request sizes, and renders data as text only.
+- Only the anchor script signs transactions. The web server holds no private key.
+
+## Results
+
+| Item | Result |
+|---|---|
+| Contract tests (Hardhat) | 15 of 15 pass (8 negative tests) |
+| Anchoring tests | 8 of 8 pass |
+| Python tests | 54 pass |
+| Detector on simulated fraud | 42 of 42 injected scenarios detected |
+| Alert precision (simulated) | 0.996 with exchange allowlist, 0.606 without |
+| Deployment gas (Sepolia) | 6,426,712 |
+| `raiseAlert` gas (Sepolia) | 683,007 (alert #0), 585,087 (alert #1) |
+| `updateStatus` gas (Sepolia) | about 35,300 (derived from the fee) |
+| Live mainnet run | 2,365 transfers ingested, 665 alerts raised |
+
+The detection figures come from **simulated** fraud written alongside the rules, and the allowlist holds the simulator's own exchange addresses. They show the pipeline works as designed, not accuracy on real laundering. Live mainnet data has no ground truth and raises false positives on exchanges, which is why the dashboard labels likely exchanges and an analyst reviews every case.
+
+## Quick start
+
+Requirements: Python 3.10+, Node.js 18+.
 
 ```bash
-npm install
-npx hardhat compile
-npx hardhat test            # 15 test cases incl. negative (revert) tests
-npm run test:gas            # gas report for the slides
-cp .env.example .env        # then fill in Sepolia RPC + a throwaway wallet key
-npm run deploy:sepolia      # prints the contract address; saves deployments/sepolia.json
-```
-
-## Security notes
-
-- Secrets live in `.env` only (git-ignored). Use a throwaway testnet wallet.
-- The contract uses role-based access (owner / analyst), custom errors, two-step ownership
-  transfer, and stores no personal data — only hashes, public addresses, a score and a bitmask.
-- Monitoring uses a read-only mainnet RPC; no mainnet keys or funds are ever involved.
-
-## Quick start (Python monitoring engine)
-
-```bash
+# Python side
 python -m venv .venv
-.venv\Scripts\activate          # Windows;  macOS/Linux: source .venv/bin/activate
+.venv\Scripts\activate            # Windows;  macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-python -m pytest                 # 32 tests
-python -m monitor.evaluate       # detector metrics on simulated fraud
-python -m monitor.run --demo     # offline demo, no RPC needed
-python -m monitor.run --once     # live: needs MAINNET_RPC_URL in .env
-python -m monitor.run --follow   # live, continuous (Ctrl+C to stop)
+
+# Contract side
+npm install
 ```
 
-`data/allowlist.json` (known exchanges/routers) and `data/watchlist.json` (flagged addresses)
-are plain JSON: `{"addresses": ["0x..."]}`. See `data/watchlist.example.json`.
+Create `.env` from `.env.example` and fill it in (never commit `.env`):
 
-## Dashboard
+```
+SEPOLIA_RPC_URL=...          # Ethereum Sepolia RPC URL
+DEPLOYER_PRIVATE_KEY=...     # throwaway testnet wallet
+MAINNET_RPC_URL=...          # read-only, for live monitoring
+```
+
+### Run the tests
 
 ```bash
-python -m monitor.serve --demo   # simulated fraud, own database, no internet needed
-python -m monitor.serve --live   # real mainnet blocks, refreshed every 12 s (needs MAINNET_RPC_URL)
-python -m monitor.serve          # view the stored live database without ingesting
+npx hardhat test             # 15 contract tests
+npm run test:gas             # gas report
+npm run test:anchor          # 8 anchoring tests
+python -m pytest             # 54 Python, dashboard and security tests
+python -m monitor.evaluate   # detector metrics on simulated fraud
 ```
 
-Open http://127.0.0.1:8000 . Alerts are grouped into **one case per wallet**. An analyst can
-mark a case reviewed / escalated / dismissed (same rules as the contract), allowlist a known
-exchange, and queue it for on-chain anchoring. Then, in a second terminal:
+### Run the dashboard
 
 ```bash
-npm run anchor      # writes the queued cases to RiskRegistry on Sepolia, records gas + tx hash
+python -m monitor.serve --demo   # simulated fraud, no internet needed
+python -m monitor.serve --live   # real mainnet blocks, refreshed every 12 s
+python -m monitor.serve          # view the stored live database
 ```
 
-Refresh the dashboard to see the on-chain proof. The web server never holds a private key:
-only the Hardhat script signs transactions.
-
-## Tests
+Open http://127.0.0.1:8000. Alerts are grouped into one case per wallet. An analyst can mark a case reviewed, escalated or dismissed, allowlist a known exchange, and queue it for anchoring. Then, in a second terminal:
 
 ```bash
-python -m pytest            # Python engine + dashboard API + security checks
-npm run test:anchor         # anchoring logic against a fake contract
-npx hardhat test            # smart contract
+npm run anchor      # writes queued cases to RiskRegistry on Sepolia; saves alert ID, tx hash and gas
 ```
+
+Refresh the dashboard to see the on-chain proof.
+
+### Deploy your own copy of the contract
+
+```bash
+npm run deploy:sepolia      # prints the address and saves deployments/sepolia.json
+```
+
+## Project structure
+
+```
+contracts/      RiskRegistry.sol
+test/           Hardhat contract tests
+scripts/        deploy.js, anchor.js, anchor-lib.js and its tests
+deployments/    sepolia.json (public address and ABI)
+monitor/        Python engine: ingestion, rules, scoring, cases, dashboard server, web UI
+monitor_tests/  Python tests
+reports/        evaluation.json
+docs/           report, slides, IEEE paper
+data/           local databases and queue files (git-ignored), watchlist/allowlist examples
+```
+
+## Limitations
+
+- Evaluation uses simulated fraud; thresholds are hand-chosen and uncalibrated.
+- Only native ETH transfers are monitored (no ERC-20, internal or cross-chain transfers).
+- The exchange allowlist is a manual file.
+- Anchoring depends on one signing key.
+- The contract runs on a testnet and has not had a formal audit.
+
+## Future work
+
+ERC-20 and internal transfers, graph features and labelled data for calibrated thresholds, batched anchoring to cut gas, multi-signature approval, deployment on a low-cost layer-2 network, and webhooks to compliance tools.
