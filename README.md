@@ -7,7 +7,7 @@ Mini project for **CS2614 Fundamentals of Blockchain**, School of Computer Scien
 
 A prototype that watches live Ethereum transactions, scores wallets from 0 to 100 with named, explainable reasons, lets an analyst review the cases, and anchors alerts and review decisions in a tamper-evident smart contract on the Sepolia testnet.
 
-- Demo video: https://drive.google.com/file/d/1XM5nRSkE7Bwcg5PfBr3fC0w2XQcKWQ9K/view?usp=sharing
+- Demo video: _add link here_
 - Contract on Sepolia: [`0x1D5a2F95057EFbbb596b9E14A7dAD3975190924b`](https://sepolia.etherscan.io/address/0x1D5a2F95057EFbbb596b9E14A7dAD3975190924b)
 - Report, slides and IEEE paper: see the [`docs`](docs) folder
 
@@ -50,8 +50,8 @@ Ethereum mainnet (read-only JSON-RPC)
 | Item | Result |
 |---|---|
 | Contract tests (Hardhat) | 15 of 15 pass (8 negative tests) |
-| Anchoring tests | 8 of 8 pass |
-| Python tests | 54 pass |
+| Anchoring and Merkle tests | 17 of 17 pass |
+| Python tests | 61 pass |
 | Detector on simulated fraud | 42 of 42 injected scenarios detected |
 | Alert precision (simulated) | 0.996 with exchange allowlist, 0.606 without |
 | Deployment gas (Sepolia) | 6,426,712 |
@@ -88,9 +88,11 @@ MAINNET_RPC_URL=...          # read-only, for live monitoring
 ```bash
 npx hardhat test             # 15 contract tests
 npm run test:gas             # gas report
-npm run test:anchor          # 8 anchoring tests
-python -m pytest             # 54 Python, dashboard and security tests
+npm run test:anchor          # 17 anchoring and Merkle tests
+python -m pytest             # 61 Python, dashboard and security tests
 python -m monitor.evaluate   # detector metrics on simulated fraud
+python -m monitor.ablation   # signal-by-signal ablation and threshold sweep
+python -m monitor.evasion    # held-out evasion variants (shows where the detector fails)
 ```
 
 ### Run the dashboard
@@ -109,6 +111,17 @@ npm run anchor      # writes queued cases to RiskRegistry on Sepolia; saves aler
 
 Refresh the dashboard to see the on-chain proof.
 
+### Batched anchoring with Merkle proofs
+
+One transaction can anchor many alerts: `MerkleAnchor.sol` stores a single Merkle root, and anyone can prove that one alert belongs to it with a short proof.
+
+```bash
+npm run deploy:batch    # deploy MerkleAnchor to Sepolia, saves deployments/sepolia-merkle.json
+npm run anchor:batch    # queue cases in the dashboard first; anchors them as ONE batch
+```
+
+Proofs are saved to `data/batch_proofs.json` (git-ignored, so keep a copy). `npx hardhat test test/MerkleAnchor.test.js` prints the gas-per-alert table for batch sizes 1 to 1000.
+
 ### Deploy your own copy of the contract
 
 ```bash
@@ -118,13 +131,13 @@ npm run deploy:sepolia      # prints the address and saves deployments/sepolia.j
 ## Project structure
 
 ```
-contracts/      RiskRegistry.sol
+contracts/      RiskRegistry.sol, MerkleAnchor.sol
 test/           Hardhat contract tests
-scripts/        deploy.js, anchor.js, anchor-lib.js and its tests
+scripts/        deploy.js, anchor.js, anchor-lib.js, merkle-lib.js, anchor-batch.js, deploy-batch.js, tests
 deployments/    sepolia.json (public address and ABI)
 monitor/        Python engine: ingestion, rules, scoring, cases, dashboard server, web UI
 monitor_tests/  Python tests
-reports/        evaluation.json
+reports/        evaluation.json, ablation.json, evasion.json
 docs/           report, slides, IEEE paper
 data/           local databases and queue files (git-ignored), watchlist/allowlist examples
 ```
@@ -132,6 +145,7 @@ data/           local databases and queue files (git-ignored), watchlist/allowli
 ## Limitations
 
 - Evaluation uses simulated fraud; thresholds are hand-chosen and uncalibrated.
+- Fixed thresholds are easy to evade: on 8 deliberately evasive variants the detector caught 14 of 144 scenarios (`python -m monitor.evasion`).
 - Only native ETH transfers are monitored (no ERC-20, internal or cross-chain transfers).
 - The exchange allowlist is a manual file.
 - Anchoring depends on one signing key.
@@ -139,4 +153,4 @@ data/           local databases and queue files (git-ignored), watchlist/allowli
 
 ## Future work
 
-ERC-20 and internal transfers, graph features and labelled data for calibrated thresholds, batched anchoring to cut gas, multi-signature approval, deployment on a low-cost layer-2 network, and webhooks to compliance tools.
+ERC-20 and internal transfers, graph features and labelled data for calibrated thresholds, multi-signature approval, deployment on a low-cost layer-2 network, and webhooks to compliance tools.
