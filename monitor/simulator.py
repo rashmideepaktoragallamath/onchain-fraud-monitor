@@ -58,7 +58,17 @@ class _Gen:
         return self.rng.randint(self.start_ts, self.end_ts - span)
 
 
-def generate(*, n_normal: int = 3000, groups_per_pattern: int = 6, hours: float = 6, seed: int = 7, end_ts: int = 1_760_000_000) -> SimResult:
+def generate(
+    *,
+    n_normal: int = 3000,
+    groups_per_pattern: int = 6,
+    hours: float = 6,
+    seed: int = 7,
+    end_ts: int = 1_760_000_000,
+    inject=None,
+) -> SimResult:
+    """Normal traffic plus injected fraud. ``inject(gen)`` may add extra labelled scenarios
+    (used by monitor.evasion); with the default of None the output is unchanged."""
     g = _Gen(seed, end_ts, hours)
     rng = g.rng
 
@@ -121,4 +131,6 @@ def generate(*, n_normal: int = 3000, groups_per_pattern: int = 6, hours: float 
         for k in range(40):
             g.emit(t0 + k * 15, s, rng.choice(targets), rng.uniform(0.01, 0.1), n0 + k, ("high_velocity", gid))
 
+    if inject is not None:
+        inject(g)
     return SimResult(g.txs, g.labels, watchlist, exchanges)

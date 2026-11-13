@@ -1,0 +1,198 @@
+{
+  "seeds": [
+    7,
+    11,
+    23
+  ],
+  "pooled": {
+    "structuring_spread": {
+      "description": "8 transfers spread over 7.5-9.95 ETH instead of clustering just under 10",
+      "scenarios": 18,
+      "detected": 14
+    },
+    "structuring_few": {
+      "description": "only 2 transfers just under the limit (rule needs 3)",
+      "scenarios": 18,
+      "detected": 0
+    },
+    "fan_out_slow": {
+      "description": "20 recipients spread over 3 hours instead of 25 minutes",
+      "scenarios": 18,
+      "detected": 0
+    },
+    "fan_out_small": {
+      "description": "12 recipients (rule needs 15)",
+      "scenarios": 18,
+      "detected": 0
+    },
+    "velocity_slow": {
+      "description": "40 tiny transfers over 3 hours instead of 10 minutes",
+      "scenarios": 18,
+      "detected": 0
+    },
+    "round_trip_lossy": {
+      "description": "funds return at 55% of the amount (rule tolerates +/-25%)",
+      "scenarios": 18,
+      "detected": 0
+    },
+    "round_trip_three_hop": {
+      "description": "A -> B -> C -> A instead of A -> B -> A",
+      "scenarios": 18,
+      "detected": 0
+    },
+    "new_wallet_small": {
+      "description": "new wallet moves 3 x 6 ETH (rule needs 20 ETH in an hour)",
+      "scenarios": 18,
+      "detected": 0
+    }
+  },
+  "scenarios": 144,
+  "detected": 14,
+  "recall": 0.097,
+  "runs": [
+    {
+      "seed": 7,
+      "scenarios": 48,
+      "detected": 4,
+      "recall": 0.083,
+      "per_variant": {
+        "structuring_spread": {
+          "description": "8 transfers spread over 7.5-9.95 ETH instead of clustering just under 10",
+          "scenarios": 6,
+          "detected": 4
+        },
+        "structuring_few": {
+          "description": "only 2 transfers just under the limit (rule needs 3)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "fan_out_slow": {
+          "description": "20 recipients spread over 3 hours instead of 25 minutes",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "fan_out_small": {
+          "description": "12 recipients (rule needs 15)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "velocity_slow": {
+          "description": "40 tiny transfers over 3 hours instead of 10 minutes",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "round_trip_lossy": {
+          "description": "funds return at 55% of the amount (rule tolerates +/-25%)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "round_trip_three_hop": {
+          "description": "A -> B -> C -> A instead of A -> B -> A",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "new_wallet_small": {
+          "description": "new wallet moves 3 x 6 ETH (rule needs 20 ETH in an hour)",
+          "scenarios": 6,
+          "detected": 0
+        }
+      }
+    },
+    {
+      "seed": 11,
+      "scenarios": 48,
+      "detected": 6,
+      "recall": 0.125,
+      "per_variant": {
+        "structuring_spread": {
+          "description": "8 transfers spread over 7.5-9.95 ETH instead of clustering just under 10",
+          "scenarios": 6,
+          "detected": 6
+        },
+        "structuring_few": {
+          "description": "only 2 transfers just under the limit (rule needs 3)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "fan_out_slow": {
+          "description": "20 recipients spread over 3 hours instead of 25 minutes",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "fan_out_small": {
+          "description": "12 recipients (rule needs 15)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "velocity_slow": {
+          "description": "40 tiny transfers over 3 hours instead of 10 minutes",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "round_trip_lossy": {
+          "description": "funds return at 55% of the amount (rule tolerates +/-25%)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "round_trip_three_hop": {
+          "description": "A -> B -> C -> A instead of A -> B -> A",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "new_wallet_small": {
+          "description": "new wallet moves 3 x 6 ETH (rule needs 20 ETH in an hour)",
+          "scenarios": 6,
+          "detected": 0
+        }
+      }
+    },
+    {
+      "seed": 23,
+      "scenarios": 48,
+      "detected": 4,
+      "recall": 0.083,
+      "per_variant": {
+        "structuring_spread": {
+          "description": "8 transfers spread over 7.5-9.95 ETH instead of clustering just under 10",
+          "scenarios": 6,
+          "detected": 4
+        },
+        "structuring_few": {
+          "description": "only 2 transfers just under the limit (rule needs 3)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "fan_out_slow": {
+          "description": "20 recipients spread over 3 hours instead of 25 minutes",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "fan_out_small": {
+          "description": "12 recipients (rule needs 15)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "velocity_slow": {
+          "description": "40 tiny transfers over 3 hours instead of 10 minutes",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "round_trip_lossy": {
+          "description": "funds return at 55% of the amount (rule tolerates +/-25%)",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "round_trip_three_hop": {
+          "description": "A -> B -> C -> A instead of A -> B -> A",
+          "scenarios": 6,
+          "detected": 0
+        },
+        "new_wallet_small": {
+          "description": "new wallet moves 3 x 6 ETH (rule needs 20 ETH in an hour)",
+          "scenarios": 6,
+          "detected": 0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "ablation": {
+    "seeds": [
+      7,
+      11,
+      23
+    ],
+    "baseline": {
+      "scenario_recall": 1.0,
+      "alert_precision": 0.986,
+      "false_positive_rate_pct": 0.12,
+      "alerts": 253
+    },
+    "without": {
+      "LARGE_VALUE": {
+        "scenario_recall": 1.0,
+        "alert_precision": 0.986,
+        "false_positive_rate_pct": 0.12,
+        "alerts": 253,
+        "recall_change": 0.0,
+        "precision_change": 0.0
+      },
+      "HIGH_VELOCITY": {
+        "scenario_recall": 0.857,
+        "alert_precision": 0.973,
+        "false_positive_rate_pct": 0.12,
+        "alerts": 127,
+        "recall_change": -0.143,
+        "precision_change": -0.013
+      },
+      "STRUCTURING": {
+        "scenario_recall": 0.857,
+        "alert_precision": 0.985,
+        "false_positive_rate_pct": 0.12,
+        "alerts": 229,
+        "recall_change": -0.143,
+        "precision_change": -0.001
+      },
+      "FAN_OUT": {
+        "scenario_recall": 1.0,
+        "alert_precision": 0.998,
+        "false_positive_rate_pct": 0.01,
+        "alerts": 219,
+        "recall_change": 0.0,
+        "precision_change": 0.012
+      },
+      "FAN_IN": {
+        "scenario_recall": 0.857,
+        "alert_precision": 0.984,
+        "false_positive_rate_pct": 0.12,
+        "alerts": 217,
+        "recall_change": -0.143,
+        "precision_change": -0.002
+      },
+      "ROUND_TRIP": {
+        "scenario_recall": 0.857,
+        "alert_precision": 0.987,
+        "false_positive_rate_pct": 0.11,
+        "alerts": 246,
+        "recall_change": -0.143,
+        "precision_change": 0.001
+      },
+      "WATCHLISTED": {
+        "scenario_recall": 0.857,
+        "alert_precision": 0.986,
+        "false_positive_rate_pct": 0.12,
+        "alerts": 247,
+        "recall_change": -0.143,
+        "precision_change": 0.0
+      },
+      "NEW_WALLET_BURST": {
+        "scenario_recall": 0.857,
+        "alert_precision": 0.985,
+        "false_positive_rate_pct": 0.12,
+        "alerts": 238,
+        "recall_change": -0.143,
+        "precision_change": -0.001
+      },
+      "ML_ANOMALY": {
+        "scenario_recall": 0.857,
+        "alert_precision": 0.985,
+        "false_positive_rate_pct": 0.12,
+        "alerts": 238,
+        "recall_change": -0.143,
+        "precision_change": -0.001
+      }
+    }
+  },
+  "threshold_sensitivity": {
+    "30": {
+      "scenario_recall": 1.0,
+      "alert_precision": 0.986,
+      "false_positive_rate_pct": 0.12,
+      "alerts": 256
+    },
+    "40": {
+      "scenario_recall": 1.0,
+      "alert_precision": 0.986,
+      "false_positive_rate_pct": 0.12,
+      "alerts": 253
+    },
+    "50": {
+      "scenario_recall": 1.0,
+      "alert_precision": 0.986,
+      "false_positive_rate_pct": 0.12,
+      "alerts": 253
+    },
+    "60": {
+      "scenario_recall": 0.445,
+      "alert_precision": 1.0,
+      "false_positive_rate_pct": 0.0,
+      "alerts": 27
+    },
+    "70": {
+      "scenario_recall": 0.286,
+      "alert_precision": 1.0,
+      "false_positive_rate_pct": 0.0,
+      "alerts": 12
+    },
+    "80": {
+      "scenario_recall": 0.008,
+      "alert_precision": 0.333,
+      "false_positive_rate_pct": 0.0,
+      "alerts": 0
+    }
+  }
+}
