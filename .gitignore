@@ -24,6 +24,7 @@ data/*.db*
 data/*.sqlite
 data/outbox.json
 data/anchored.json
+data/batch_proofs.json
 data/demo_*.json
 data/cache/
 

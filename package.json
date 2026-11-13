@@ -10,7 +10,9 @@
     "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
     "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
     "anchor": "hardhat run scripts/anchor.js --network sepolia",
-    "test:anchor": "node --test scripts/anchor-lib.test.js"
+    "test:anchor": "node --test scripts/anchor-lib.test.js scripts/merkle-lib.test.js",
+    "deploy:batch": "hardhat run scripts/deploy-batch.js --network sepolia",
+    "anchor:batch": "hardhat run scripts/anchor-batch.js --network sepolia"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
